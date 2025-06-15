@@ -1,86 +1,432 @@
-**Deploy Classification Neural Network on Serverless GPU platform of Cerebrium**
+# ResNet-18 ONNX Model Deployment on Cerebrium
+
+## 🚨 **IMPORTANT FOR EVALUATORS**
+
+### **Required Information for test_server.py**
+
+**Deployment URL:**
+```
+https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier
+```
+
+**API Key:**
+```
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiJwLWM3ODMyODZmIiwiaWF0IjoxNzQ5OTc3OTI2LCJleHAiOjIwNjU1NTM5MjZ9.MiBLtpw3gijysnhFsFQ7JJmzXMQO10iOYcYPAGuZ3wqJQqdsE10LMvn7Y_WJ4cu15SZOXc_JSTZqR7gt-erB2PQwFypm5-d3h7Pgbgbt4QQHqFxxeKBezGYSYwvMirSNovDHrV72ZLBNyfTxmn6PtmHXC6RuRQJQJLc2q0lxykkqtrVUf9joI38BmyLnTnTO54-RuIFWJzSht6pj1ATPPLi2gSsjHE55luxWv1R-2ySRVsq9EjQcP7rRMYV1Fhw-Yc_AtmYrRbDo8dK4JM4KuZlHV6DpDQfzs_2TITUHhpuDvDM0MItc2nhCY5SWWn_T583qYCZDHE0Whc8PpESoDA
+```
+
+**Quick Test Command:**
+```bash
+python test_server.py --url https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier --api-key "" --preset-tests
+```
+
+**Dashboard URL:**
+```
+https://dashboard.cerebrium.ai/projects/p-c783286f/apps/p-c783286f-resnet18-classifier
+```
+
+---
+
+## Project Overview
+
+This project implements a complete MLOps pipeline for deploying a ResNet-18 image classification model on the Cerebrium serverless platform. The model is converted from PyTorch to ONNX format and deployed using Docker containers with comprehensive testing and monitoring capabilities.
 
 
-You have to deploy a Machine Learning Model on Cerebrium [https://www.cerebrium.ai/].
-You have to use GitHub for the codebase.
+### **All Requirements Completed**
 
-**Assignment Protocols**
-- We expect it to take ~4 hours, with an extra 15 min for clear loom explanation(s)
-    - The assessment is timeboxed at 5 hours total in a single block. So please plan accordingly
-- You can only use Python as a programming Language
-- You cannot take help from any other person
-    - But you can use google to search for references
-- Record a 5-10 mins of code walkthrough of the work you have done. You can use Loom Platform (https://www.loom.com) to record the video
-    - A live demo of each of the features mentioned below:
-        - Cerebrium platform deployment page
-        - Other scripts as required in "Deliverable" section below
-        - Show all steps of Cerebrium deployment running successfully, and what you think as a pre-requisite to trigger deployment
-    - Code overview of each of those features:
-        - Why did you implement it that way?
-        - Is there any way you would improve it?
-    - Explain what tests you have developed and why
-    - Explain what parts of the assessment are completed and what is missing?
-    - Make sure to submit the screen recording link in the submission after you are done recording
-    - Please note that the free plan on Loom only allows for videos up to 5 minutes in length. As such, you may need to record two separate 5-minute videos
+| Deliverable | Status | Description |
+|-------------|--------|-------------|
+| `convert_to_onnx.py` |  Complete | PyTorch to ONNX model conversion |
+| `model.py` |  Complete | ONNX model loading and image preprocessing |
+| `test.py` |  Complete | Local testing framework |
+| `app.py` | Complete | FastAPI application for Cerebrium |
+| `Dockerfile` |  Complete | Docker container configuration |
+| `cerebrium.toml` | Complete | Cerebrium deployment configuration |
+| `test_server.py` |  Complete | Deployed model testing script |
+| `deploy.py` |  Complete | Automated deployment script |
+| `requirements.txt` |  Complete | Python dependencies |
+| `DEPLOYMENT.md` |  Complete | Deployment guide |
 
-**Cerebrium Details:**
-- You need to use custom Docker Image based deployment. Any submission which is not based on Dockerfile will be rejected.
-- This example from Cerebrium explains how to use Docker Image [https://github.com/CerebriumAI/examples/tree/master/2-advanced-concepts/5-dockerfile]
+## 🚀 Quick Start
+
+### 1. **Model Conversion**
+```bash
+# Convert PyTorch model to ONNX
+python convert_to_onnx.py
+```
+
+### 2. **Local Testing**
+```bash
+# Test all components locally
+python test.py --verbose --performance
+```
+
+### 3. **Deployment**
+```bash
+# Build and deploy to Cerebrium
+python deploy.py --build --test --deploy
+```
+
+### 4. **Test Deployed Model**
+```bash
+# Test the deployed model (replace with your deployment URL and API key)
+python test_server.py --url https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier --api-key "your-api-key" --preset-tests
+```
+
+## 📁 Project Structure
+
+```
+mtailor_mlops_assessment/
+├── Model Conversion
+│   ├── convert_to_onnx.py          # PyTorch → ONNX conversion
+│   ├── pytorch_model.py            # Original PyTorch model
+│   └── pytorch_model_weights.pth   # Pre-trained weights
+│
+├── Model Components  
+│   ├── model.py                    # ONNX inference & preprocessing
+│   └── model.onnx                  # Converted ONNX model (44.58 MB)
+│
+├──  Testing
+│   ├── test.py                     # Local testing framework
+│   └── test_server.py              # Deployed model testing
+│
+├──  Deployment
+│   ├── app.py                      # FastAPI application
+│   ├── Dockerfile                  # Container configuration
+│   ├── cerebrium.toml              # Cerebrium config
+│   ├── deploy.py                   # Deployment automation
+│   ├── requirements.txt            # Dependencies
+│   └── DEPLOYMENT.md               # Deployment guide
+│
+├── Test Data
+│   ├── n01440764_tench.jpeg        # Test image (class 0)
+│   └── n01667114_mud_turtle.JPEG   # Test image (class 35)
+│
+└── Documentation
+    ├── README.md                   # Original requirements
+    └── PROJECT_README.md           # This file
+```
+
+## 🔧 Component Details
+
+### **1. Model Conversion (`convert_to_onnx.py`)**
+- **Purpose**: Convert PyTorch ResNet-18 to ONNX format
+- **Features**:
+  - Automatic model loading and conversion
+  - Validation against PyTorch outputs
+  - Dynamic batch size support
+  - Comprehensive error handling
+
+**Usage:**
+```bash
+python convert_to_onnx.py [--input-model PATH] [--output-model PATH]
+```
+
+### **2. Model Components (`model.py`)**
+- **ImagePreprocessor**: Handles image preprocessing pipeline
+  - RGB conversion, resizing (224x224), normalization
+  - Multiple input formats: file paths, PIL Images, NumPy arrays
+- **ONNXModelInference**: ONNX model loading and inference
+  - CPU/GPU execution providers
+  - Top-K predictions with confidence scores
+- **ModelPipeline**: End-to-end classification pipeline
+
+**Usage:**
+```python
+from model import ModelPipeline
+pipeline = ModelPipeline('model.onnx')
+class_id = pipeline.classify_image('image.jpg')
+```
+
+### **3. Local Testing (`test.py`)**
+- **Comprehensive Test Suite**: 28 test cases covering:
+  - Image preprocessing (9 tests)
+  - ONNX model inference (7 tests)  
+  - End-to-end pipeline (4 tests)
+  - Edge cases and error handling (5 tests)
+  - Performance benchmarks (3 tests)
+
+**Usage:**
+```bash
+python test.py --verbose --performance
+```
+
+### **4. FastAPI Application (`app.py`)**
+- **REST API Endpoints**:
+  - `POST /predict` - Upload image files
+  - `POST /predict_url` - Classify from URLs
+  - `POST /predict_base64` - Base64 encoded images
+  - `GET /health` - Health monitoring
+  - `GET /info` - Model information
+- **Features**: Structured logging, error handling, CORS support
+
+### **5. Deployment Infrastructure**
+- **`Dockerfile`**: Production-ready container with Python 3.11
+- **`cerebrium.toml`**: Cerebrium platform configuration
+- **`deploy.py`**: Automated deployment with testing
+- **`requirements.txt`**: Pinned dependency versions
+
+### **6. Server Testing (`test_server.py`)**
+- **Comprehensive Testing**: Tests deployed model functionality
+- **Features**:
+  - Single image classification
+  - Preset tests with known results
+  - Performance benchmarking
+  - Platform monitoring
+  - API endpoint validation
+
+## Model Information
+
+- **Architecture**: ResNet-18 (18-layer residual network)
+- **Dataset**: ImageNet (1000 classes)
+- **Input**: 224×224 RGB images
+- **Output**: Class probabilities for 1000 ImageNet classes
+- **Format**: ONNX (44.58 MB)
+- **Performance**: < 3 seconds inference time
+
+### **Test Images & Expected Results**
+- `n01440764_tench.jpeg` → Class 0 (Tench fish)
+- `n01667114_mud_turtle.JPEG` → Class 35 (Mud turtle)
+
+## Deployment Guide
+
+### **Prerequisites**
+1. **Docker**: Install Docker Desktop or Docker Engine
+2. **Cerebrium Account**: Sign up at https://www.cerebrium.ai/
+3. **Cerebrium CLI**: `pip install cerebrium`
+
+### **Step-by-Step Deployment**
+
+#### **1. Setup Environment**
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure Cerebrium CLI
+cerebrium login
+```
+
+#### **2. Build and Test Locally**
+```bash
+# Build Docker image
+python deploy.py --build
+
+# Test Docker image locally
+python deploy.py --test
+```
+
+#### **3. Deploy to Cerebrium**
+```bash
+# Deploy using CLI
+cerebrium deploy
+
+# Or use automated script
+python deploy.py --deploy
+```
+
+#### **4. Get Deployment Information**
+After successful deployment, you'll receive:
+- **Dashboard URL**: https://dashboard.cerebrium.ai/projects/p-c783286f/apps/p-c783286f-resnet18-classifier
+- **API Endpoint**: https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier
+- **API Key**: Available in your Cerebrium dashboard
+
+## 🧪 Testing the Deployed Model
+
+### **Important: API Key and URL Required**
+
+To test the deployed model, you need:
+1. **Deployment URL**: Get from Cerebrium dashboard after deployment
+2. **API Key**: Get from your Cerebrium account dashboard
+
+### **test_server.py Usage Guide**
+
+#### **1. Basic Single Image Classification**
+```bash
+# Test with a single image
+python test_server.py \
+  --url https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier \
+  --api-key "your-api-key-here" \
+  --image n01440764_tench.jpeg
+```
+
+**Expected Output:**
+```
+ Classification Result:
+   Class ID: 0
+   Confidence: 10.9109
+   Inference Time: 0.093s
+   Top 5 Predictions:
+     1. Class 0: 10.9109
+     2. Class 1: 7.4568
+     3. Class 29: 7.2242
+     4. Class 397: 7.0951
+     5. Class 389: 6.3205
+```
+
+#### **2. Preset Tests (Recommended)**
+```bash
+# Run preset tests with known expected results
+python test_server.py \
+  --url https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier \
+  --api-key "your-api-key-here" \
+  --preset-tests
+```
+
+**Expected Output:**
+```
+✅ Test tench PASSED: Predicted 0 (expected 0)
+✅ Test turtle PASSED: Predicted 35 (expected 35)
+Preset tests completed: 2/2 passed
+```
+
+#### **3. Performance Testing**
+```bash
+# Run performance benchmarks
+python test_server.py \
+  --url https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier \
+  --api-key "your-api-key-here" \
+  --performance \
+  --image n01440764_tench.jpeg
+```
+
+#### **4. Platform Monitoring**
+```bash
+# Monitor platform health and availability
+python test_server.py \
+  --url https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier \
+  --api-key "your-api-key-here" \
+  --monitor
+```
+
+#### **5. Comprehensive Test Suite**
+```bash
+# Run all tests and save results
+python test_server.py \
+  --url https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier \
+  --api-key "your-api-key-here" \
+  --comprehensive \
+  --output test_results.json \
+  --verbose
+```
+
+### **Alternative: Using Environment Variables**
+```bash
+# Set environment variable for API key
+export CEREBRIUM_API_KEY="your-api-key-here"
+
+# Then run tests without --api-key flag
+python test_server.py \
+  --url https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier \
+  --preset-tests
+```
+
+### **Command Line Options**
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `--url` | **Required** - Deployment URL | `--url https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier` |
+| `--api-key` | API key for authentication | `--api-key "your-key"` |
+| `--image` | Path to image file | `--image n01440764_tench.jpeg` |
+| `--image-url` | URL of image to classify | `--image-url https://example.com/image.jpg` |
+| `--top-k` | Number of top predictions | `--top-k 3` |
+| `--preset-tests` | Run preset tests | `--preset-tests` |
+| `--performance` | Run performance tests | `--performance` |
+| `--monitor` | Run platform monitoring | `--monitor` |
+| `--comprehensive` | Run all tests | `--comprehensive` |
+| `--output` | Save results to JSON file | `--output results.json` |
+| `--verbose` | Enable verbose logging | `--verbose` |
+
+### **API Endpoints Available**
+
+The deployed model provides these REST API endpoints:
+
+1. **POST /predict** - Upload image files
+   ```bash
+   curl -X POST \
+     -H "Authorization: Bearer your-api-key" \
+     -F "file=@image.jpg" \
+     https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier/predict
+   ```
+
+2. **POST /predict_url** - Classify from URL
+   ```bash
+   curl -X POST \
+     -H "Authorization: Bearer your-api-key" \
+     -H "Content-Type: application/json" \
+     -d '{"image_url": "https://example.com/image.jpg", "top_k": 5}' \
+     https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier/predict_url
+   ```
+
+3. **POST /predict_base64** - Base64 encoded images
+   ```bash
+   curl -X POST \
+     -H "Authorization: Bearer your-api-key" \
+     -H "Content-Type: application/json" \
+     -d '{"image_data": "base64-encoded-image", "top_k": 5}' \
+     https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier/predict_base64
+   ```
+
+4. **GET /health** - Health check
+   ```bash
+   curl -H "Authorization: Bearer your-api-key" \
+     https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier/health
+   ```
+
+5. **GET /info** - Model information
+   ```bash
+   curl -H "Authorization: Bearer your-api-key" \
+     https://api.cortex.cerebrium.ai/v4/p-c783286f/resnet18-classifier/info
+   ```
+
+## 🔍 Troubleshooting
+
+### **Common Issues**
+
+#### **1. Authentication Errors (401 Unauthorized)**
+- **Problem**: Missing or invalid API key
+- **Solution**: 
+  ```bash
+  # Get API key from Cerebrium dashboard
+  # Use it in command or set environment variable
+  export CEREBRIUM_API_KEY="your-api-key"
+  ```
+
+#### **2. File Upload Errors (400 Bad Request)**
+- **Problem**: Invalid file type or missing filename
+- **Solution**: Ensure image files are valid JPEG/PNG with proper extensions
+
+#### **3. Deployment URL Not Found (404)**
+- **Problem**: Incorrect deployment URL
+- **Solution**: Check Cerebrium dashboard for correct URL format
+
+#### **4. Timeout Errors**
+- **Problem**: Model cold start or network issues
+- **Solution**: Retry request, model will warm up after first use
+
+### **Validation Checklist**
+
+Before running tests, ensure:
+-  Model is deployed and showing as "healthy" in Cerebrium dashboard
+-  API key is valid and has proper permissions
+-  Test images (`n01440764_tench.jpeg`, `n01667114_mud_turtle.JPEG`) exist in current directory
+-  All dependencies are installed (`pip install -r requirements.txt`)
+-  Network connectivity to Cerebrium API endpoints
 
 
-**Model Details:**
-- Model is designed to perform classification on an input Image
-- Model will be used in production where one would expect answers within 2-3 seconds
-- PyTorch Implementation of model is present in pytorch_model.py, and weights can be downloaded from this link: https://www.dropbox.com/s/b7641ryzmkceoc9/pytorch_model_weights.pth?dl=0
-- The model is trained on ImageNet Dataset [https://www.image-net.org]
-- The input to the model is an image of size 224x224, and the output is the array with probabilities for each class.
-- The length of the output array is equal to the number of classes [1000] in the ImageNet dataset.
-- There are two images in this repo:
-    - n01440764_tench belongs to class id 0
-    - n01667114_mud_turtle belongs to class id 35
+## 🚀 Next Steps & Improvements
 
-Model is trained on images with specific pre-processing steps, e.g. you need to do the following pre-processings on the image before passing it to the model. A function (preprocess_numpy) is implemented in the model class which performs the necessary pre-processing on the image, and at the end of pytorch_model.py you can see how to use the model on an image file to get inference.
-- Convert to RGB format if needed. The model accepts the image in RGB format, not in BGR. Code will never throw errors for this so keep an eye on the library you use to load image.
-- Resize to 224x224 (use bilinear interpolation)
-- Divide by 255
-- Normalize using mean values for each channel [RGB][0.485, 0.456, 0.406] and standard deviation values for each channel [RGB] [0.229, 0.224, 0.225]
-    - subtract mean and divide standard deviation per channel
+### **Completed Features**
+-  Complete MLOps pipeline
+-  Production deployment
+-  Comprehensive testing
+-  Performance monitoring
+-  Error handling and logging
+-  API documentation
 
-**Deliverable**
-- convert_to_onnx.py | codebase to convert the PyTorch Model to the ONNX model
-- model.py with the following classes/functionalities, make their separate classes:
-    - Onnx Model loading and prediction call
-    - Pre-processing of the Image [Sample code provided in pytorch_model.py]
-- test.py | codebase to test the code/model written. This should test everything one would expect for ML Model deployment.
-- Things needed to deploy the code to the Cerebrium
-- test_server.py | codebase to make a call to the model deployed on the Cerebrium (Note: This should test deployment not something on your local machine)
-    - This should accept the path of the image and return/print the id of the class the image belongs to
-    - And also accept a flag to run preset custom tests, something like test.py but uses deployed model.
-    - Add more tests to test the Cerebrium as a platform. Anything to monitor the deployed model.
-- Readme File | which has steps to run/use all the deliverables with proper details, such that a person who has no prior information about this repo can understand and run this easily with no blockers.
+### **Potential Enhancements**
+-  CI/CD pipeline integration
+-  Model versioning and A/B testing
+-  Advanced monitoring and alerting
+-  Batch processing capabilities
+-  Model performance analytics
+-  Auto-scaling optimization
 
-**Evaluation Criteria**
- - *Python* best practices
- - Completeness: Did you include all features?
- - Correctness: Does the solution (all deliverables) work in sensible, thought-out ways?
- - Maintainability: Is the code written in a clean, maintainable way?
- - Testing: Is the solution adequately tested?
- - Documentation: Is the codebase well-documented and has proper steps to run any of the deliverables?
-
-**Things which are very important and will be considered during evaluation**
-- Your test_server.py should be properly implemented, we will use that to test your final deployment.
-    - Kindly put API-Key and model api link that needs to be passed to the test_server.py, incase its not added in test_server.py and needs to be passed as arguments.
-    - If test_server.py is not runable without requesting further information from you, your submission will not be evaluated.
-- Don't deploy PyTorch Model, you need to convert the PyTorch Model to ONNX first and use that in the deployment.
-- Code Formatting and Documentation.
-- Proper use of Git.
-- Meaningful and good commits, we will monitor commit history.
-
-**Extra Points:**
-- CI pipeline to test Docker Image builds succesfully everytime we push a new commit to repo.
-- Make pre-processing steps part of Onnx File [<name_of_model>.onnx file], which needs to be done during onnx conversion, instead of implementing them in the code inside app.py.
-
-**Note:**
-- You get 30 USD of free credits on Cerebrium on new signup.
-    - This is more than enough for this task. You would at max spend 2-3 USD from free credits.
-- In case, you add your credit/debit card on the platform (which is not needed) and some mishap occurs, and you are charged an extra amount MTailor is not accountable for that.
